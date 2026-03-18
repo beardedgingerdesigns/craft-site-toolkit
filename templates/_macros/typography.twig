@@ -1,0 +1,30 @@
+{% macro colorVars(color, prefix) %}
+--{{ prefix }}-color: {{ color.color.getRgb }};
+--{{ prefix }}-color-val: {{ color.color.getRgb|replace('rgb(','')|replace(')','') }};
+{% endmacro %}
+{% macro typographyVars(colorSet) %}
+	{%- if colorSet.headingColor|length -%}
+--headline-color: {{ colorSet.headingColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.bodyColor|length -%}
+--body-color: {{ colorSet.bodyColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.textLinkColor|length -%}
+--text-link-color: {{ colorSet.textLinkColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.textLinkHoverColor|length -%}
+--text-link-hover-color: {{ colorSet.textLinkHoverColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.buttonTextColor|length -%}
+--button-color: {{ colorSet.buttonTextColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.buttonHoverColor|length -%}
+--button-hover-color: {{ colorSet.buttonHoverColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.buttonBackgroundColor|length -%}
+--button-background-color: {{ colorSet.buttonBackgroundColor.one().color.getRgb }};
+	{% endif %}
+	{%- if colorSet.buttonBackgroundHoverColor|length -%}
+--button-background-hover-color: {{ colorSet.buttonBackgroundHoverColor.one().color.getRgb }};
+	{% endif %}
+{% endmacro %}
