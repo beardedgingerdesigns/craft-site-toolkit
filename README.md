@@ -1,6 +1,8 @@
 # Craft Site Toolkit
 
-Shared templates and UI primitives for MBD Craft CMS projects.
+Shared templates and UI primitives for Craft CMS projects.
 
-This package is intended to be installed as a private Craft plugin and exposes
+This package is installed as a Craft plugin and exposes
 its templates under the `site-toolkit/` namespace.
+
+Release packages with Git tags. See [RELEASE.md](RELEASE.md).

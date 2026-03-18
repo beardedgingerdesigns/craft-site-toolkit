@@ -1,8 +1,7 @@
 {
     "name": "bgd/craft-site-toolkit",
-    "description": "Shared Craft CMS templates and UI toolkit for MBD projects.",
+    "description": "Shared Craft CMS templates and UI toolkit for Craft projects.",
     "type": "craft-plugin",
-    "version": "1.0.0",
     "autoload": {
         "psr-4": {
             "bgd\\sitetoolkit\\": "src/"
