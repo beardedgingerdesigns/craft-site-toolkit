@@ -1,9 +1,11 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <header class="">
 	<div id="search-container" style="display:none;" class="pt-4 pb-4 closed">
-		{% include globalPath ~ 'search' %}
+		{% include [includePaths[0] ~ 'search', includePaths[1] ~ 'search'] %}
 	</div>
 	<div class="container">
-		{% include globalPath ~ 'tophat' %}
+		{% include [includePaths[0] ~ 'tophat', includePaths[1] ~ 'tophat'] %}
 		<div class="row align-items-center lower-nav pb-4">
 			<div class="col-5 col-lg-auto">
 				<div class="logo">
@@ -35,10 +37,10 @@
 									{% set navType = node.navigationType %}
 									{% if  navType == 'megamenu' %}
 
-										{% include globalPath ~ 'megaMenu' %}
+										{% include [includePaths[0] ~ 'megaMenu', includePaths[1] ~ 'megaMenu'] %}
 
 									{% else %}
-										{% include globalPath ~ 'navItem' %}
+										{% include [includePaths[0] ~ 'navItem', includePaths[1] ~ 'navItem'] %}
 									{% endif %}
 								{% endfor %}
 							</ul>

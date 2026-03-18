@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <div class="row pt-4 pb-4 tophat" style="z-index:1000">
 	<div class="col-12">
 		<div class="row  align-items-center top-nav justify-content-end pb-4 pb-lg-0 gx-1 gx-lg-3">
@@ -6,7 +8,7 @@
 					{% set nodes = craft.navigation.nodes().handle('tophatNavigation').all() %}
 					{% for node in nodes %}
 						<div class="col-auto">
-							{% include globalPath ~ 'navLink' with{node:node} %}
+							{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:node} %}
 						</div>
 					{% endfor %}
 					{# <div class="col-auto">

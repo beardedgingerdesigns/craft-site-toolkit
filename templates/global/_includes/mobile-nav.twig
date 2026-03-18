@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <div class="mobile-nav" style="display:none;">
 	<div class="container-fluid">
 		<div class="logoContain row mb-4 align-items-center">
@@ -85,7 +87,7 @@
 												{% case 'navItem' %}
 													<div class="col-12">
 														<div class="nav-item">
-															{% include globalPath ~ 'navLink' with{node:item} %}
+															{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:item} %}
 
 														</div>
 													</div>
@@ -118,13 +120,13 @@
 									{% set navItems =  node.children %}
 									{% for item in navItems %}
 										<li class="row g-0">
-											{% include globalPath ~ 'navLink' with{node:item} %}
+											{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:item} %}
 
 										</li>
 									{% endfor %}
 								</ul>
 							{% else %}
-								{% include globalPath ~ 'navLink' with{node:node} %}
+								{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:node} %}
 							{% endif %}
 						{% endif %}
 					</li>
@@ -141,7 +143,7 @@
 					{% set nodes = craft.navigation.nodes().handle('tophatNavigation').all() %}
 					{% for node in nodes %}
 						<div class="col-12">
-							{% include globalPath ~ 'navLink' with{node:node} %}
+							{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:node} %}
 						</div>
 					{% endfor %}
 					<div class="col-12">
@@ -159,7 +161,7 @@
 
 
 				<ul class="list-inline">
-					{% include globalPath ~ 'social' with{class:'list-inline-item'} %}
+					{% include [includePaths[0] ~ 'social', includePaths[1] ~ 'social'] with{class:'list-inline-item'} %}
 				</ul>
 			</div>
 		</div>

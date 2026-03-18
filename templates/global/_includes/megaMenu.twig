@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <li class="mega-drop-down col-auto">
 	<a href="#"  role="button" aria-expanded="false" aria-haspopup="true" role="button">
 		<span aria>
@@ -64,7 +66,7 @@
 												{% case 'navItem' %}
 													<div class="col-12">
 														<div class="nav-item">
-															{% include globalPath ~ 'navLink' with{node:item} %}
+															{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:item} %}
 
 														</div>
 													</div>

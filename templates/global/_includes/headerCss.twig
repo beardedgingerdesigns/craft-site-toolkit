@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <style>
  {{ source('css/crucial.css') }}
 
@@ -37,5 +39,5 @@
 <noscript><link rel="stylesheet" href="{{ mainCss }}"></noscript>
 
 {# 2) Now append CMS variables at the tail of <head> #}
-{% set cmsVars %}{% include globalPath ~ 'siteStyles' %}{% endset %}
+{% set cmsVars %}{% include [includePaths[0] ~ 'siteStyles', includePaths[1] ~ 'siteStyles'] %}{% endset %}
 {% do view.registerHtml(cmsVars, view.POS_HEAD, 'cms-vars') %}

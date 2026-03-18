@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <footer class="bg-white">
 	<div class="container">
 		<div class="row gy-4">
@@ -7,7 +9,7 @@
 			{% set nodes = craft.navigation.nodes().handle('footerNavigation').all() %}
 			{% for node in nodes %}
 				<div class="col-auto">
-					{% include globalPath ~ 'navLink' with{node:node} %}
+					{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:node} %}
 				</div>
 			{% endfor %}
 
@@ -36,7 +38,7 @@
 			</div>
 <div class="col-lg-auto">
 	<ul class="row align-items-center gx-2 p-0 m-0 justify-content-center justify-content-lg-start">
-		{% include globalPath ~ 'social' with{class:'list-inline-item col-auto'} %}
+		{% include [includePaths[0] ~ 'social', includePaths[1] ~ 'social'] with{class:'list-inline-item col-auto'} %}
 	</ul>
 
 </div>

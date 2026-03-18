@@ -1,4 +1,5 @@
-{% include globalPath ~ 'tophat' %}
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+{% include [includePaths[0] ~ 'tophat', includePaths[1] ~ 'tophat'] %}
 <header>
 	<div class="container">
 		<div class="row">

@@ -1,3 +1,5 @@
+{% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
+
 <ul class="dropdown-menu login-dropdown">
 	<div class="container-fluid">
 		<div class="row">
@@ -24,7 +26,7 @@
 				<ul class="">
 					{% for node in nodes %}
 						<li class="">
-							{% include globalPath ~ 'navLink' with{node:node} %}
+							{% include [includePaths[0] ~ 'navLink', includePaths[1] ~ 'navLink'] with{node:node} %}
 
 						</li>
 					{% endfor %}
