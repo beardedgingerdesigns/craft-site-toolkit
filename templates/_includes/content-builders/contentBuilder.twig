@@ -1,0 +1,13 @@
+{% set field = field ?? 'contentBuilder' %}
+{% set blocks = entry[field].level(1).all() %}
+{% set bodyBlockPaths = bodyBlockPaths ?? ['body_blocks/', 'site-toolkit/body_blocks/'] %}
+
+{% for block in blocks %}
+{% set row = block.sectionProperties[0] ?? null %}
+{% set blockContainerClass = containerClass ?? row.containerWidth ?? 'container' %}
+
+    {% include [bodyBlockPaths[0] ~ block.type.handle, bodyBlockPaths[1] ~ block.type.handle] with {
+        block: block,
+        containerClass: blockContainerClass
+    } %}
+{% endfor %}

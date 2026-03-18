@@ -14,6 +14,11 @@ $syncTargets = [
         'source' => $pluginBaseDir . '/templates/_includes/columnItems/README.md',
         'targetDir' => $projectBaseDir . '/templates/_includes/columnItems',
     ],
+    [
+        'label' => 'content builder',
+        'source' => $pluginBaseDir . '/templates/_includes/content-builders/README.md',
+        'targetDir' => $projectBaseDir . '/templates/_includes/content-builders',
+    ],
 ];
 
 foreach ($syncTargets as $syncTarget) {
