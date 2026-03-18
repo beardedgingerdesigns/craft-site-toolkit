@@ -1,0 +1,10 @@
+{% set items = child.positions.all() %}
+{% for item in items %}
+	<div class="position  mb-4">
+		<a href="{{ item.url }}">
+			<h4 class="mb-2">{{ item.title }}</h4>
+			<p class="mb-0"><i>{{ item.positionLocation }}, IA</i><br>
+			<strong>{{ item.salaryDescription}}</strong></p>
+		</a>
+	</div>
+{% endfor %}

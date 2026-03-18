@@ -1,0 +1,24 @@
+{% set entry = nestedEntry ?? child.partners.one %}
+
+<div class="partner">
+	<img src="{{ entry.logo.one.url() ?? '' }}" alt="{{ entry.title }}">
+	<h4>{{ entry.title }}</h4>
+	{% if entry.solutions | length %}
+	<div class="row">
+		{% for solution in entry.solutions.all() %}
+		<div class="col-4">
+			{% set icon = entry.logo.one %}
+{% if icon and icon.extension == 'svg' %}
+		{{ svg(icon) }}
+		{% else %}
+<img src="{{ entry.logo.one.url() }}" alt="{{ entry.title }}">
+{% endif %}
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% if entry.website | length %}
+	<p class="button"><a href="{{ entry.website }}" target="_blank">More Information</a></p>
+	{% endif %}
+	
+</div>

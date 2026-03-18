@@ -1,0 +1,39 @@
+{% set items = child.faq.all() %}
+<div class="row faq-group" id="faq-group-{{ child.id }}">
+{% for item in items %}
+	{% if loop.first %}
+	{% set class = 'active' %}
+	{% else %}
+	{% set class = 'disabled' %}
+	{% endif %}
+    {% include '_includes/faq' with {entry:item,class:class} %}
+{% endfor %}
+</div>
+
+{% js at endBody %}
+(function () {
+  var group = document.getElementById('faq-group-{{ child.id }}');
+  if (!group || group.__faqInited) return;
+  group.__faqInited = true;
+
+  group.querySelectorAll('.faq').forEach(function (faqItem) {
+    faqItem.addEventListener('click', function () {
+      if (faqItem.classList.contains('active')) return;
+
+      group.querySelectorAll('.faq').forEach(function (item) {
+        item.classList.remove('active');
+        item.classList.add('disabled');
+
+        var content = item.querySelector('.faq-content');
+        if (content) content.style.display = 'none';
+      });
+
+      faqItem.classList.remove('disabled');
+      faqItem.classList.add('active');
+
+      var activeContent = faqItem.querySelector('.faq-content');
+      if (activeContent) activeContent.style.display = '';
+    });
+  });
+}());
+{% endjs %}

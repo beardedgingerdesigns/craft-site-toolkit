@@ -1,0 +1,4 @@
+{% set form = child.formSelect %}
+{% set form = form.handle %}
+{% set thankYou = child.thankYou ?? craft.freeform.form(form).successMessage %}
+{% include globalPath ~ 'formItem' with {thankYou:thankYou,form:form} %}

@@ -1,0 +1,92 @@
+{% set entry = child.location ?? entry ?? '' %}
+
+{% if entry %}
+{% set address = entry.address[0] %}
+{% set buildingHours = entry.buildingHours %}
+{% set buildingClosed = 0  %}
+{% for day in buildingHours %}
+	{% if day.isBlank() %}
+		{% set buildingClosed = buildingClosed + 1 %}
+	{% endif %}
+{% endfor %}
+{% if buildingClosed < 7 %}
+	{% set buildingOpen = true %}
+{% else %}
+	{% set buildingOpen = false %}
+{% endif %}
+
+{% set driveUpHours = entry.driveUpHours %}
+{% set driveUpClosed = 0  %}
+{% for day in driveUpHours %}
+	{% if day.isBlank() %}
+		{% set driveUpClosed = driveUpClosed + 1 %}
+	{% endif %}
+{% endfor %}
+{% if driveUpClosed < 7 %}
+	{% set driveUpOpen = true %}
+{% else %}
+	{% set driveUpOpen = false %}
+{% endif %}
+{% set showOpen = true %}
+
+{% if buildingOpen %}
+	{% set todayOpenTime = buildingHours.today.open|time('short') %}
+	{% set todayCloseTime = buildingHours.today.close|time('short') %}
+{% elseif driveUpOpen %}
+	{% set todayOpenTime = driveUpHours.today.open|time('short') %}
+	{% set todayCloseTime = driveUpHours.today.close|time('short') %}
+{% else %}
+	{% set showOpen = false %}
+{% endif %}
+
+
+{% set includeDirections = includeDirections ?? false %}
+<div class="module bg-white location-meta">
+<div>
+	{% if showOpen %}
+		{% include '_includes/openTag' with{time:todayCloseTime} %}
+	{% endif %}
+	<h4 class="mb-1">{{ entry.title }}</h4>
+	<p class="text-sm">
+		<strong>
+			<a href="{{ entry.url }}" class="text-link">View Location</a>
+		</strong>
+	</p>
+	<div class="row">
+		<div class="col col-lg-12">
+			<p class="mb-2">{{ address.streetAddress}},<br>
+				{{ address.city }},
+				{{ address.state }}
+				{{ address.zip }}</p>
+		</div>
+		<div class="col col-lg-12">
+			<p class="mb-1">{{ entry.phoneNumber }}</p>
+			<div class="mb-1 row">
+				{% for property in entry.locationProperties %}
+					{% switch property %}
+						{% case 'atm' %}
+							{% set icon = 'far fa-credit-card' %}
+						{% case 'driveUp' %}
+							{% set icon = 'fas fa-car-side' %}
+					{% endswitch %}
+					<div class="col-auto">
+						<p>
+							<i class="{{ icon }} {{ property}}"></i>&nbsp;&nbsp;{{ property.label }}</p>
+					</div>
+				{% endfor %}
+			</div>
+
+		</div>
+	</div>
+	</div>
+
+	{% if entry.googleMapsLink | length and includeDirections%}
+<div class="location-directions">
+
+		<p class="button">
+			<a href="{{ entry.googleMapsLink }}" target="_blank">Get Directions</a>
+		</p>
+		</div>
+	{% endif %}
+</div>
+{% endif %}

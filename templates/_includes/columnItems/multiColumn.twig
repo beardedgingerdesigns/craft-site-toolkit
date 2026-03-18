@@ -1,0 +1,32 @@
+{% set columnItemPaths = columnItemPaths ?? ['_includes/columnItems/', 'site-toolkit/_includes/columnItems/'] %}
+<div class="row">
+	{% for item in child.children %}
+	{% set class = '' %}
+
+	{% set properties = item.backgroundProperties.all() %}
+
+	{% for prop in properties %}
+
+	{% switch prop.type %}
+
+	{% case "backgroundColor" %}
+
+	{% set class ='bg-'~prop.color.one.slug %}
+
+	{% endswitch %}
+{% endfor %}
+	<div class="{% for prop in item.columnProperties %}{{ prop.behavior }}{{ prop.breakpoint }}{% if prop.breakpoint == '' %}{{ prop.width | replace('-','') }}{% else %}{{ prop.width }}{% endif %} {% endfor %} mb-4">
+		{% set children = item.children.all() %}
+	        {% for child in children %}
+    <div class="{{ extraClass ?? 'module' }} {{ class | lower }} module-{{ child.type }}" id="module-{{ item.id }}">
+
+        {% include [columnItemPaths[0] ~ child.type, columnItemPaths[1] ~ child.type] with{child:child} %}
+
+    </div>
+    {% endfor %}
+
+
+
+</div>
+	{% endfor %}
+</div>

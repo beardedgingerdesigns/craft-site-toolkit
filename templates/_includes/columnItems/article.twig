@@ -1,0 +1,26 @@
+{% set articles = [] %}
+{% set columnWidth = child.columnWidth ?? 12 %}
+
+{% if child.all %}
+	{% set limit =  child.limit ?? 1 %}
+	{% set params = {
+	section:'articles',
+	limit:limit
+	} %}
+
+	{% set articles = craft.entries(params) %}
+	{% else %}
+	{% set articles = articles|push(child.newsArticleS.one()) %}
+{% endif %}
+<div class="row align-items-stretch gy-4 gy-lg-0">
+{% for article in articles %}
+	<div class="col-12 col-lg-{{ columnWidth }} {% if loop|length > 1 %}mb-4 {% endif %}mb-lg-0">
+	{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %}
+	</div>
+{% endfor %}
+{% if child.cta|length %}
+<div class="col-12 text-center mt-4">
+{% include globalPath ~ 'cta' with{block:child} %}
+</div>
+{% endif %}
+</div>

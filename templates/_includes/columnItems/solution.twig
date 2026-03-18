@@ -1,0 +1,29 @@
+{% set entry = nesetedEntry ?? child.solutions.one %}
+{% if child.displayType == 'simplified' %}
+	<a href="{{ entry.url }}" class="solution-logo-link d-inline-block">
+		<img src="{{ entry.logo.one.url() }}" alt="{{ entry.title }}">
+	</a>
+{% else %}
+{% set icon = entry.logo.one %}
+	<div class="icon-contain">
+{% if icon and icon.extension == 'svg' %}
+		{{ svg(icon) }}
+		{% else %}
+
+{% endif %}
+</div>
+<h4>{{ entry.title }}</h4>
+<p>{{ entry.description}}</p>
+<div class="divider">
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+</div>
+<a href="{{ entry.url}}">Get Details</a>
+{% endif %}

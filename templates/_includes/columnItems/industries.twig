@@ -1,0 +1,28 @@
+{% set entries = child.industries %}
+
+
+{% for entry in entries %}
+{% set image = entry.icon.one() %}
+<div class="module module-industry module-multiColumn">
+	<div class="row align-items-center">
+		<div class="col-2  mb-4">
+			<div class="module  module-image">
+				{{ svg(image) }}
+			</div>
+		</div>
+		<div class="col  mb-4">
+			<div class="module  module-text" >
+				<a href="{{ entry.url }}">
+					<div class="container-fluid">
+						<div class="row g-1">
+							<div class="col">{{ entry.title }}</div>
+							<div class="col-auto"><i class="fas fa-angle-right"></i></div>
+						</div>
+					</div>
+				</a>
+				
+			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}

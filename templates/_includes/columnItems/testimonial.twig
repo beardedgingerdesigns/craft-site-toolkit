@@ -1,0 +1,34 @@
+{% set crop = {
+	width:200,
+	height:200,
+    format:'webp'
+}
+
+%}
+
+        {% for entry in child.testimonials %}
+        
+                <div class="row">
+                    <div class="col-12">
+                        <div class="testimonial-wrapper">
+                            <div class="row gy-4 align-items-center">
+                                <div class="col">
+                                    <div class="testimonial-content">
+                                        {{ entry.richText }}
+                                        <p class="byline mb-0">
+                                           {{ entry.byline[0].name }}
+                                        </p>
+                                        {% if entry.byline[0].position %}
+                                        <p class="text-sm">{{ entry.byline[0].position }}</p>
+
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-1"></div>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}

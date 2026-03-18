@@ -1,0 +1,28 @@
+{% set crop = '' %}
+
+{% set image = child.image[0].asset[0] %}
+
+{% set width = image.width() %}
+{% set height = image.height() %}
+{% set maxWidth = min(width, 1800) %}
+<div class="row {{ child.contentHorizontalAlignment }}">
+	<div class="col-auto">
+
+{% if image.extension == 'svg' %}
+	{{ svg(image) }}
+{% else %}
+
+{% include '_includes/imageInclude' with {
+    alt: image[0].altText ?? image.title,
+    sizes: [
+        { width: min((maxWidth / 2)|round(0, 'ceil'), 900) },
+        { width: maxWidth }
+    ],
+    ratio: width / height,
+    image: image
+} %}
+
+
+
+{% endif %}
+</div></div>

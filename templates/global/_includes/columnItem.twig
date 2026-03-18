@@ -1,5 +1,6 @@
 {% extends "site-toolkit/global/_includes/columnWrap" %}
 {% block content %}
+{% set columnItemPaths = columnItemPaths ?? ['_includes/columnItems/', 'site-toolkit/_includes/columnItems/'] %}
 
 {% set class = '' %}
 {% set item = item ?? entry %}
@@ -22,7 +23,7 @@
     <div class="col-12">
         <div class="{{ extraClass ?? 'module' }} {{ class | lower }} module-{{ child.type }} col-12" id="module-{{ item.id }}">
 
-            {% include '_includes/columnItems/' ~ child.type with {child: child} %}
+            {% include [columnItemPaths[0] ~ child.type, columnItemPaths[1] ~ child.type] with {child: child} %}
 {% if item.customCss | length %}
             <style>
         #module-{{ item.id }} {

@@ -1,0 +1,15 @@
+<div class="row justify-content-center">
+
+{% if child.image | length and child.image[0].asset | length %}
+	{% set image = child.image[0].asset[0] %}
+
+<div class="col-6">
+<div class="card-image">
+	
+	{% include '_includes/imageInclude' with{alt:image[0].altText ?? image.title,sizes:[{ width: 200 }, { width: 400}],ratio:1/1,image:image} %}
+</div>
+
+</div>
+{% endif %}
+{{ child.richText }}
+</div>

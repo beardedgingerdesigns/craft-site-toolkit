@@ -1,0 +1,24 @@
+{% set image = child.image.one.asset.one %}
+{% if image %}
+
+{% include '_includes/imageInclude' with{alt:child.firstName ~ ' ' ~ child.lastName,sizes:[{ width:150 }],ratio:1/1,image:image,mode:'fit'} %}
+
+
+{% endif %}
+<p class="name"><strong>{{ child.firstName }} {{ child.lastName}}</strong></p>
+<div class="divider">
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+</div>
+{% if child.subtitle %}
+<p class="position-title">{{ child.subtitle }}</p>
+{% endif %}
+<div class="bio">
+	{{ child.richText }}
+</div>
