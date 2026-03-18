@@ -1,6 +1,6 @@
 <?php
 
-namespace mbd\sitetoolkit;
+namespace bgd\sitetoolkit;
 
 use craft\base\Plugin as BasePlugin;
 use craft\web\View;
