@@ -1,0 +1,96 @@
+{% include globalPath ~ 'tophat' %}
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-auto">
+				<a href="{{ siteUrl }}" class="primary-logo" >
+					{% set icon = siteControls.logo.one %}
+					{% if icon | length %}
+					{% if icon and icon.extension == 'svg' %}
+					<div class="icon-enclose" style="width:{{ siteControls.logoWidth }}px">
+					{{ svg(icon) }}
+					</div>
+					{% else %}
+					<img src="{{ icon.url }}" alt="{{ systemName }}" style="width:{{ siteControls.logoWidth }}px">
+					{% endif %}
+					{% endif %}
+				</a>
+			</div>
+
+			<div class="col col-lg d-none d-lg-flex p-relative mainnav" id="mobile-menu">
+				<div class="nav-wrapper">
+					<div class="row justify-content-center">
+						<nav class="col-12">
+							<ul class="row align-items-center justify-content-end">
+
+								{% set nodes = craft.navigation.nodes().handle('mainNav').level(1).all() %}
+								{% for node in nodes %}
+								<li class="col-auto menu-item">
+
+									{% if node.children | length %}
+									<div class="dropdown-container">
+										<a href="#" data-toggle="dropdown-toggle">
+											<span>{{ node.title }}</span> <i class="fas fa-angle-down"></i></a>
+											<div class="dropdown">
+												<ul>
+													{% for child in node.children.all() %}
+													<li class="menu-item menu-item-{{ loop.index }}"><a href="{{ child.url }}">{{ child }}</a></li>
+													{% endfor %}
+												</ul>
+											</div>
+										</div>
+										{% else %}
+										<a href="{{ node.url }}" {% if node.newWindow %} target="_blank" rel="noopener"{% endif %} {% for attribute in node.customAttributes %}{{ attribute.attribute }}="{{ attribute.value }}"{% endfor %} class="{% if node.active %}nav-active{% endif %} {{ node.classes }}">
+											<span>{{ node.title }}</span></a>
+											{% endif %}
+										</li>
+										{% endfor %}
+										{% if craft.app.request.segments|last != 'search' %}
+										<li class="col-auto menu-item">
+											<a href="#" id="searchTrigger" class="search"><i class="fas fa-search"></i></a></li>
+										{% endif %}
+									</ul>
+								</nav>
+
+							</div>
+
+
+						</div>
+						<div id="searchOverlay">
+							{% set query = craft.app.request.param('search') %}
+							{% if query | length %}
+							{% set value = query %}
+							{% else %}
+							{% set value = '' %}
+							{% endif %}
+							<div class="row justify-content-end align-items-center">
+								<div class="col">
+									<form action="{{ siteUrl}}search" class="main-form row g-1 align-items-center">
+										<div class="col"><input value="{{ value }}" type="text" name="search" placeholder="search"></div>
+										<div class="col-auto">
+											<button type="submit"><i class="fas fa-search"></i></button>
+										</div>
+
+
+									</form>
+								</div>
+								<div class="col-auto close">
+									<button id="closeSearch"><i class="fas fa-times"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col d-lg-none" id="nav">
+
+						<div class="nav nav-mobile-trigger d-lg-none">
+							<ul class="navbar-nav ml-auto text-right d-flex nav justify-content-end align-items-center">
+								<li><a id="navTrigger"><i class="fas fa-bars"></i></a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</header>

@@ -1,0 +1,9 @@
+{% set cta = block.cta.one() %}
+{% if cta.type == 'internal' %}
+{% set link = cta.entry.one.url() ?? '' %}
+{% set target = '' %}
+{% else %}
+{% set link = cta.externalLink ?? '' %}
+{% set target = 'target="_blank"' %}
+{% endif %}
+<p class="button {{cta.buttonStyle}}"><a {% if cta.speedbump is defined and cta.speedbump %}data-speedbump="true"{% endif %} href="{{ link }}" {{ target }}>{{ cta.text }}</a></p>

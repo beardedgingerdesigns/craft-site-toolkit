@@ -1,0 +1,20 @@
+
+{% set icon = 'fas fa-calendar-alt' %}
+<article class="article-resource">
+	<a href="{{ entry.eventLink }}" target="_blank">
+		<div class="module bg-white">
+			<div class="entry-meta">
+			<div class="date-meta">
+					<span><i class="{{icon}}"></i> {{ entry.section }}</span>
+					
+				</div>
+				<h4 class="mb-0">{{ entry.title | replace('®','<sup>®</sup>') | raw}}</h4>
+				<p style="font-size:14px">{{ entry.eventStartDateTime|date('l, M jS') }} &#8211; {{ entry.eventEndDateTime|date('l, M jS') }}</p>
+				{% if entry.description | length %}
+					<p>{{entry.description}}</p>
+				{% endif %}
+			</div>
+		</div>
+	
+</a>
+</article>

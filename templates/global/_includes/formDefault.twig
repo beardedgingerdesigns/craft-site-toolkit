@@ -1,0 +1,9 @@
+{% set class = class ?? 'main-form' %}
+{% set freeform = craft.freeform.form(form,{
+		class:class,
+		submitClass: "button",
+		disableCaptcha: captcha,
+		}) %}
+<div id="formContent-{{ form }}" class="formContent">
+	{{ freeform.render() }}
+</div>

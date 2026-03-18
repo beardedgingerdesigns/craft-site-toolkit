@@ -1,0 +1,48 @@
+{% import '_macros/typography.twig' as typo %}
+{% if siteStyles.fontStack|length %}
+	{{siteStyles.fontStack|raw}}
+{% endif %}
+{% apply spaceless %}
+<style>
+	{% set colors = craft.categories.group('siteColors').all() %}
+
+
+		:root {
+			{% for color in colors %}
+				{{typo.colorVars(color, color|kebab)}}
+			{% endfor %}
+
+			{% if siteStyles.headlineStyles | length %}
+				--headline-style: {{siteStyles.headlineStyles}}
+				;
+			{% endif %}
+			{% if siteStyles.headingFont | length %}
+				--headline-font: {{siteStyles.headingFont | raw}}
+				;
+			{% endif %}
+			{% if siteStyles.bodyFont | length %}
+				--body-font: {{siteStyles.bodyFont | raw}}
+				;
+			{% endif %}
+
+			{% if siteStyles.typographyColors | length %}
+				{{typo.typographyVars(siteStyles.typographyColors.one())}}
+			{% endif %}
+		}
+
+		{% for color in colors %}
+		.bg-{{ color|camel }} {
+			background-color:{{ color.color.getRgb }};
+
+		}
+			{% set colorSet = color.typographyColors.one() %}
+			{% if colorSet %}
+				.bg-{{color|camel}}{
+					
+					{{typo.typographyVars(colorSet)}}
+				}
+			{% endif %}
+		{% endfor %}
+
+</style>
+{% endapply %}

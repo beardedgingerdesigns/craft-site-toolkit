@@ -1,0 +1,40 @@
+{% extends "site-toolkit/global/_includes/columnWrap" %}
+{% block content %}
+
+{% set class = '' %}
+{% set item = item ?? entry %}
+{% set properties = entry.backgroundProperties.all() %}
+
+{% for prop in properties %}
+{% switch prop.type %}
+
+{% case 'backgroundColor' %}
+{% set color = prop.color.eagerly().one() %}
+{% set class = color ? 'bg-' ~ color.slug : class %}
+
+{% endswitch %}
+
+{% endfor %}
+{% set children = item.children.all() %}
+<div class="row gy-4">
+
+    {% for child in children %}
+    <div class="col-12">
+        <div class="{{ extraClass ?? 'module' }} {{ class | lower }} module-{{ child.type }} col-12" id="module-{{ item.id }}">
+
+            {% include '_includes/columnItems/' ~ child.type with {child: child} %}
+{% if item.customCss | length %}
+            <style>
+        #module-{{ item.id }} {
+            {{ item.customCss }}
+        }
+            </style>
+{% endif %}
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

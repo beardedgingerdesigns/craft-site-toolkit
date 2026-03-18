@@ -1,0 +1,226 @@
+<div class="mobile-nav" style="display:none;">
+	<div class="container-fluid">
+		<div class="logoContain row mb-4 align-items-center">
+			<div class="col-8">
+				<div class="logo">
+
+					<a href="{{ siteUrl }}" class="primary-logo">
+						{% set icon = siteControls.logo.one %}
+						{% if icon and icon.extension == 'svg' %}
+							<div class="icon-enclose">
+								{{ svg(icon) }}
+							</div>
+						{% else %}
+							<img src="{{ icon.url }}" alt="{{ systemName }}" style="width:{{ siteControls.logoWidth }}px">
+						{% endif %}
+					</a>
+				</div>
+			</div>
+			<div class="col text-end">
+				<a href="#" id="closeMobile">
+					<i class="fas fa-times"></i>
+				</a>
+			</div>
+		</div>
+		<nav id="mobileNav">
+
+			{% set nodes = craft.navigation.nodes().handle('mainNav').level(1).all() %}
+			<ul class="nav">
+				{% for node in nodes %}
+					<li>
+						{% set navType = node.navigationType %}
+						{% if  navType == 'megamenu' %}
+							<a class="mobile-parent">
+								{{ node.title }}
+								<div class="dropdownToggle">
+									<i class="fas fa-angle-down"></i>
+								</div>
+							</a>
+
+							<div>
+								{% set columnGroup = craft.navigation.nodes().descendantOf(node).level(2).all() %}
+								{% for column in columnGroup %}
+								<ul class="row mobile-nav-group mb-4 {{ column.classes }} ">
+									{% set navItems =  craft.navigation.nodes().descendantOf(column).level(3).all() %}
+										{% for item in navItems %}
+										<li class="col-12">
+
+
+											{% switch item.navigationType %}
+												{% case 'article' %}
+													<div class="col-12">
+														<div class="nav-item builder-section">
+															{% set article = item.getElement() %}
+
+															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %}
+														</div>
+													</div>
+												{% case 'articleAuto' %}
+													<div class="col-12">
+														<div class="nav-item builder-section">
+															{% set category = item.resourceCategory.one() %}
+															{% set article = craft.entries.section('articles').relatedTo(category).one() %}
+
+															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %}
+														</div>
+													</div>
+
+												{% case 'callout' %}
+													
+														<div class="nav-item nav-callout">
+															<a href="{{ item.url }}" {% if item.newWindow %} target="_blank" rel="noopener" {% endif %} {% for attribute in item.customAttributes %} {{ attribute.attribute }}="{{ attribute.value }}" {% endfor %} class="{% if item.active %}nav-active{% endif %} {{ item.classes }}">
+																{% set image = item.asset.one() %}
+																<div class="row align-items-center gx-2">
+																	<div class="col-2">
+																		<div class="icon-contain"><img src="{{ image.url() }}" alt="{{ item.title }}"></div>
+																	</div>
+																	<div class="col">
+																		<p>
+																			<strong>{{ item.title }}</strong>
+																		</p>
+																	</div>
+																</div>
+															</a>
+														</div>
+												{% case 'navItem' %}
+													<div class="col-12">
+														<div class="nav-item">
+															{% include globalPath ~ 'navLink' with{node:item} %}
+
+														</div>
+													</div>
+												{% default %}
+													<div class="col-12">
+														<div class="nav-item">
+															<h4 class="{{ item.classes }}">{{ item.title }}</h4>
+															{{ item.richText }}
+														</div>
+													</div>
+											{% endswitch %}
+										</li>
+									{% endfor %}
+
+							</ul>
+								{% endfor %}
+							</div>
+
+
+						{% else %}
+							{% if node.hasDescendants %}
+								<a class="mobile-parent">
+									{{ node.title }}
+									<div class="dropdownToggle">
+										<i class="fas fa-angle-down"></i>
+									</div>
+								</a>
+
+								<ul class="container-fluid">
+									{% set navItems =  node.children %}
+									{% for item in navItems %}
+										<li class="row g-0">
+											{% include globalPath ~ 'navLink' with{node:item} %}
+
+										</li>
+									{% endfor %}
+								</ul>
+							{% else %}
+								{% include globalPath ~ 'navLink' with{node:node} %}
+							{% endif %}
+						{% endif %}
+					</li>
+				{% endfor %}
+			</ul>
+
+
+
+
+		</nav>
+		<div class="tophat row mb-4 mt-4">
+			<div class="col-12 items">
+				<div class="row align-items-center gy-3">
+					{% set nodes = craft.navigation.nodes().handle('tophatNavigation').all() %}
+					{% for node in nodes %}
+						<div class="col-12">
+							{% include globalPath ~ 'navLink' with{node:node} %}
+						</div>
+					{% endfor %}
+					<div class="col-12">
+						<a href="{{ siteUrl }}search">
+							<i class="fas fa-search"></i>
+							Search</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="social-list row">
+			<div class="col-12">
+
+
+				<ul class="list-inline">
+					{% include globalPath ~ 'social' with{class:'list-inline-item'} %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% js at endBody %}
+(function () {
+  var mobileNav = document.querySelector('.mobile-nav');
+  var openButton = document.getElementById('mobileTrigger');
+  var closeButton = document.getElementById('closeMobile');
+  var nav = document.getElementById('mobileNav');
+
+  if (!mobileNav || mobileNav.__mobileNavInited) return;
+  mobileNav.__mobileNavInited = true;
+
+  function setOpenState(isOpen) {
+    document.documentElement.classList.toggle('mobile-nav-open', isOpen);
+    document.body.classList.toggle('mobile-nav-open', isOpen);
+    mobileNav.style.display = isOpen ? 'flex' : 'none';
+    if (openButton) openButton.classList.toggle('active', isOpen);
+  }
+
+  if (openButton) {
+    openButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      setOpenState(mobileNav.style.display === 'none' || mobileNav.style.display === '');
+    });
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      setOpenState(false);
+    });
+  }
+
+  if (nav) {
+    nav.querySelectorAll('.mobile-parent').forEach(function (trigger) {
+      trigger.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        var panel = trigger.nextElementSibling;
+        var isActive = trigger.classList.contains('active');
+
+        nav.querySelectorAll('.mobile-parent').forEach(function (item) {
+          item.classList.remove('active');
+        });
+
+        nav.querySelectorAll('.mobile-parent + div, .mobile-parent + ul').forEach(function (item) {
+          item.classList.remove('active');
+          item.style.display = 'none';
+        });
+
+        if (!isActive && panel) {
+          trigger.classList.add('active');
+          panel.classList.add('active');
+          panel.style.display = '';
+        }
+      });
+    });
+  }
+}());
+{% endjs %}

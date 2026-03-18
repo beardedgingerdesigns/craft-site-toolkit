@@ -1,0 +1,91 @@
+<footer class="bg-white">
+	<div class="container">
+		<div class="row gy-4">
+		<div class="col-12">
+		<p class="subhead m-0">Our Products</p>
+		</div>
+			{% set nodes = craft.navigation.nodes().handle('footerNavigation').all() %}
+			{% for node in nodes %}
+				<div class="col-auto">
+					{% include globalPath ~ 'navLink' with{node:node} %}
+				</div>
+			{% endfor %}
+
+
+
+		</div>
+
+		<div class="row ">
+			<div class="col-12">
+				<hr>
+			</div>
+		</div>
+
+		<div class="row justify-content-lg-between justify-content-center align-items-center">
+			<div class="col-12 col-lg-3">
+				<a href="{{ siteUrl }}" class="footer-logo">
+					{% set icon = siteControls.logo.one %}
+					{% if icon and icon.extension == 'svg' %}
+						<div class="icon-enclose">
+							{{ svg(icon) }}
+						</div>
+					{% else %}
+						<img src="{{ icon.url }}" alt="{{ systemName }}" style="width:{{ siteControls.logoWidth }}px">
+					{% endif %}
+				</a>
+			</div>
+<div class="col-lg-auto">
+	<ul class="row align-items-center gx-2 p-0 m-0 justify-content-center justify-content-lg-start">
+		{% include globalPath ~ 'social' with{class:'list-inline-item col-auto'} %}
+	</ul>
+
+</div>
+
+		</div>
+		
+		<div class="row">
+			<div class="col-12">
+				<hr>
+			</div>
+		</div
+		
+
+		<div class="row legal-row gy-4">
+			<div class="col-12 col-lg-auto text-center text-lg-start">
+				<div class="row">
+				<div class="col-12 col-lg text-lg-start">
+					<p class="m-0" style="font-size:14px;">
+						{% set phones = seomatic.site.identity.organizationContactPoints %}
+						{% for phone in phones %}
+<a href="tel:{{phone.telephone|replace('-','')}}">{{ phone.telephone }}</a>
+{% if loop.first %}&nbsp;•&nbsp;
+{% endif %}
+
+						{% endfor %} 
+					</p>
+				</div>
+				<div class="col-12 col-lg text-lg-center">
+<p style="font-size:14px;" class="m-0">{{ seomatic.site.identity.genericStreetAddress }}
+•
+{{ seomatic.site.identity.genericAddressLocality }},
+{{ seomatic.site.identity.genericAddressRegion }},
+{{ seomatic.site.identity.genericPostalCode }}</p>
+
+
+
+
+
+		
+				</div>
+					<div class="col-12 col-lg text-lg-end">
+						<p style="font-size:14px;">
+							&copy;{{ 'now'|date('Y') }}
+							{{ siteName }}. All Rights Reserved.
+						</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div></footer>

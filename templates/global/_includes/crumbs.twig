@@ -1,0 +1,20 @@
+{% if entry.slug != "__home__" %}
+	<div class="crumb-list pt-3 pb-3 bg-light-gray">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					{% for crumb in crumbList %}
+						{% if loop.last %}
+							<p>{{ crumb.name }}</p>
+						{% else %}
+							<p>
+								<a href="{{ crumb.item }}">{{ crumb.name }}</a>
+							</p>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+

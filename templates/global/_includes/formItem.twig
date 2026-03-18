@@ -1,0 +1,42 @@
+<div class="form-container" id="container-{{ form }}">
+
+	<div id="formContent-{{ form }}" class="formContent">
+
+{% set form = freeform.form(form) %}
+{% set captcha = false %}
+{% if env == "staging" or env == "local" %}
+	{% set captcha = true %}
+{% endif %}
+
+
+{{ form.render({
+    attributes: {
+        class: "main-form",
+    },
+    disableCaptcha: true,
+
+    buttons: {
+        attributes: {
+            submit: { class: "button button-tertiary" }
+        },
+    },
+
+}) }}
+
+
+
+
+	</div>
+    <style>
+    .alert.alert-success {
+    color:#5b9018;
+    font-family:var(--headline-font);
+    font-weight:600;
+    font-size:16px;
+    }
+
+    </style>
+</div>
+
+
+		

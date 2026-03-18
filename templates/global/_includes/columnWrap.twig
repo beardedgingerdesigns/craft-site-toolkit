@@ -1,0 +1,74 @@
+{% set classes = extraClasses ?? '' %}
+{% set parentBlock = parentBlock ?? null %}
+{% set loopIndex = loopIndex ?? 1 %}
+{% set class = class ?? '' %}
+{% set videos = videos ?? [] %}
+{% set images = images ?? [] %}
+{% set positions = positions ?? [] %}
+{% set repeats = repeats ?? [] %}
+{% set sizes = sizes ?? [] %}
+{% set crop = crop ?? {
+    quality: 30,
+    format: 'webp'
+} %}
+
+{% set properties = entry.backgroundProperties.all() %}
+
+{% for prop in properties %}
+    {% switch prop.type %}
+
+    {% case 'backgroundColor' %}
+    {% set color = prop.color.eagerly().one() %}
+    {% set class = color ? 'bg-' ~ color.slug : class %}
+
+    {% case 'backgroundVideo' %}
+    {% set video = prop.video.eagerly().one() %}
+    {% if video %}
+        {% set videos = videos|push(video.url()) %}
+    {% endif %}
+
+    {% case 'backgroundImage' %}
+    {% set image = prop.image.eagerly().one() %}
+    {% set position = prop.backgroundPosition[0] ?? null %}
+    {% set size = prop.backgroundSize[0] ?? null %}
+    {% if image %}
+        {% set images = images|push('url(' ~ image.url(crop) ~ ')') %}
+    {% endif %}
+    {% set xPosition = position.xCustom ?? position.xAxis %}
+    {% set yPosition = position.yCustom ?? position.yAxis %}
+    {% set width = size.width ?? 'auto' %}
+    {% set height = size.height ?? 'auto' %}
+
+    {% if height == 'Cover' and width == 'Cover' %}
+        {% set sizeProp = 'cover' %}
+    {% else %}
+        {% set sizeProp = width ~ ' ' ~ height %}
+    {% endif %}
+
+    {% set positions = positions|push(xPosition ~ ' ' ~ yPosition) %}
+    {% set repeats = repeats|push(prop.backgroundRepeat) %}
+    {% set sizes = sizes|push(sizeProp) %}
+
+    {% endswitch %}
+{% endfor %}
+
+<div style="" class="index-{{ parentBlock ? parentBlock.id : entry.id }}-{{ loopIndex }} {% for prop in entry.columnProperties %}{{ prop.behavior }}{{ prop.breakpoint }}{% if prop.breakpoint == '' %}{{ prop.width | replace('-', '') }}{% else %}{{ prop.width }}{% endif %} {% endfor %} {{ classes }}">
+
+    {% block content %}
+    {% endblock %}
+    <style>
+{% apply spaceless %}
+{% if images | length %}
+
+    .index-{{ parentBlock ? parentBlock.id : entry.id }}-{{ loopIndex }} {
+        position: relative;
+        {# background-image:{% for image in images %}{{image}}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %}; #}
+        background-position: {% for position in positions %}{{ position }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-repeat: {% for repeat in repeats %}{{ repeat }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-size:{% for size in sizes %}{{ size }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    }
+
+{% endif %}
+{% endapply %}
+</style>
+</div>

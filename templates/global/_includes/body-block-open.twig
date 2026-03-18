@@ -1,0 +1,77 @@
+{% set row = block.sectionProperties[0] %}
+
+{% set class = '' %}
+{% set bg = null %}
+
+{% set images = [] %}
+{% set positions = [] %}
+{% set repeats = [] %}
+{% set sizes = [] %}
+{% set crop = {
+    quality: 30,
+    format: 'webp'
+} %}
+
+{% set containerClass = row.containerWidth %}
+{% set properties = block.backgroundProperties.all() %}
+
+{% for prop in properties %}
+{% switch prop.type %}
+
+{% case 'backgroundColor' %}
+{% set color = prop.color.eagerly().one() %}
+{% set class = color ? 'bg-' ~ color.slug : class %}
+
+{% case 'backgroundImage' %}
+{% set image = prop.image.eagerly().one() %}
+{% set position = prop.backgroundPosition[0] ?? null %}
+{% set size = prop.backgroundSize[0] ?? null %}
+{% if image %}
+    {% if image.format == 'svg' %}
+        {% set images = images|push('url(' ~ image.url() ~ ')') %}
+    {% else %}
+        {% set images = images|push('url(' ~ image.url(crop) ~ ')') %}
+    {% endif %}
+{% endif %}
+{% set xPosition = position.xCustom ?? position.xAxis %}
+{% set yPosition = position.yCustom ?? position.yAxis %}
+{% set width = size.width ?? 'auto' %}
+{% set height = size.height ?? 'auto' %}
+
+{% if height == 'Cover' and width == 'Cover' %}
+{% set sizeProp = 'cover' %}
+{% else %}
+{% set sizeProp = width ~ ' ' ~ height %}
+{% endif %}
+
+{% set positions = positions|push(xPosition ~ ' ' ~ yPosition) %}
+{% set repeats = repeats|push(prop.backgroundRepeat) %}
+{% set sizes = sizes|push(sizeProp) %}
+
+{% endswitch %}
+{% endfor %}
+
+<section id="{{ row.sectionId }}" class="{{ block.extraClasses }} block{{ block.id }} {% block extraClass -%}{%- endblock %} builder-section builder-{{ block.type }} {{ row.sectionPaddingTop }} {{ row.sectionPaddingBottom }} {{ class | lower }} " style="{{ row.marginTop|length ? 'margin-top:' ~ row.marginTop ~ ';' }} {{ row.marginBottom|length ? 'margin-bottom:' ~ row.marginBottom ~ ';' }};z-index:{{ row.zIndex ?? 1 }}">
+    {% block content %}
+    {% endblock %}
+
+    <style>
+{% if block.customCss | length %}
+.block{{ block.id }} {
+    {{ block.customCss }}
+}
+{% endif %}
+    {% if images | length %}
+
+        .block{{ block.id }} {
+        background-image:{% for image in images %}{{ image }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-position: {% for position in positions %}{{ position }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-repeat: {% for repeat in repeats %}{{ repeat }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-size:{% for size in sizes %}{{ size }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    }
+    {% endif %}
+
+
+</style>
+
+</section>

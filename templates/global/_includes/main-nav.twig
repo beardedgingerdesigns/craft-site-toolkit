@@ -1,0 +1,58 @@
+<header class="">
+	<div id="search-container" style="display:none;" class="pt-4 pb-4 closed">
+		{% include globalPath ~ 'search' %}
+	</div>
+	<div class="container">
+		{% include globalPath ~ 'tophat' %}
+		<div class="row align-items-center lower-nav pb-4">
+			<div class="col-5 col-lg-auto">
+				<div class="logo">
+
+					<a href="{{ siteUrl }}" class="primary-logo" style="max-width:100%;">
+						{% set icon = siteControls.logo.one %}
+						{% if icon and icon.extension == 'svg' %}
+							<div class="icon-enclose" style="width:{{ siteControls.logoWidth }}px">
+								{{ svg(icon) }}
+							</div>
+						{% else %}
+							<img src="{{ icon.url }}" alt="{{ systemName }}" style="width:{{ siteControls.logoWidth }}px">
+						{% endif %}
+					</a>
+				</div>
+
+
+			</div>
+
+			<div class="col-12 col-lg justify-content-lg-end d-lg-block">
+				<div class="mainnav" id="mobile-menu">
+					<div class="nav-wrapper">
+
+						<nav class="justify-content-end">
+							<ul class="d-none d-lg-flex sf_colsIn row gx-5">
+
+								{% set nodes = craft.navigation.nodes().handle('mainNav').level(1).all() %}
+								{% for node in nodes %}
+									{% set navType = node.navigationType %}
+									{% if  navType == 'megamenu' %}
+
+										{% include globalPath ~ 'megaMenu' %}
+
+									{% else %}
+										{% include globalPath ~ 'navItem' %}
+									{% endif %}
+								{% endfor %}
+							</ul>
+							
+						</nav>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto d-lg-none">
+				<button id="mobileTrigger" class="faux-link">
+					<i class="fas fa-bars"></i>
+				</button>
+			</div>
+
+		</div>
+	</div>
+</header>

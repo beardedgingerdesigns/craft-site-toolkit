@@ -1,0 +1,15 @@
+{% set items = block.multiColumn.all() %}
+{% set justifyContent = justifyContent ?? '' %}
+
+
+<div class="{{ containerClass ?? 'container' }}">
+	<div class="row gy-2 {{ justifyContent }}">
+		{% for item in items %}
+			<div style="" class=" index-{{ block }}-{{ loop.index }} {% for prop in item.columnProperties %}{{ prop.columnBehavior }}{{ prop.columnBreakpoint }}{% if prop.columnBreakpoint == '' %}{{ prop.columnWidth | replace('-','') }}{% else %}{{ prop.columnWidth }}{% endif %} {% endfor %}  {{ classes ?? '' }}">
+				<div class="module">
+					{{ item.columnContent }}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+</div>

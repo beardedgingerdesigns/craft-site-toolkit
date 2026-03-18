@@ -1,0 +1,19 @@
+<li class="col-auto menu-item">
+	{% if node.children | length %}
+	<div class="dropdown-container">
+		<a href="#" data-toggle="dropdown-toggle">
+			<span>{{ node.title }}</span></a>
+			<div class="dropdown">
+				<ul>
+					{% for child in node.children.all() %}
+					<li class="menu-item menu-item-{{ loop.index }}">
+						{% include globalPath ~ 'navLink' with{node:child} %}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+	</div>
+	{% else %}
+	{% include globalPath ~ 'navLink' with{node:node} %}
+	{% endif %}
+</li>

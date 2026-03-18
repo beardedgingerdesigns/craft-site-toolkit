@@ -1,0 +1,21 @@
+<div class="row pt-4 pb-4 tophat" style="z-index:1000">
+	<div class="col-12">
+		<div class="row  align-items-center top-nav justify-content-end pb-4 pb-lg-0 gx-1 gx-lg-3">
+			<div class="col-12 col-lg-auto items d-none d-lg-block">
+				<div class="row align-items-center">
+					{% set nodes = craft.navigation.nodes().handle('tophatNavigation').all() %}
+					{% for node in nodes %}
+						<div class="col-auto">
+							{% include globalPath ~ 'navLink' with{node:node} %}
+						</div>
+					{% endfor %}
+					{# <div class="col-auto">
+						<a href="{{ siteUrl }}search">
+							<i class="fas fa-search"></i>
+							Search</a>
+					</div> #}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

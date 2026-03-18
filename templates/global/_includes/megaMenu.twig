@@ -1,0 +1,90 @@
+<li class="mega-drop-down col-auto">
+	<a href="#"  role="button" aria-expanded="false" aria-haspopup="true" role="button">
+		<span aria>
+			{{node.title}}
+			{# <i class="fas fa-angle-down"></i> #}
+		</span>
+	</a>
+	<div class="mega-menu">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="container">
+						<div class="row">
+							{% if node.richText | length %}
+							<div class="col-12">{{ node.richText }}</div>
+							{% endif %}
+							{% set columnGroup = craft.navigation.nodes().descendantOf(node).level(2).all() %}
+							{% for column in columnGroup %}
+								{% set navItems =  craft.navigation.nodes().descendantOf(column).level(3).all() %}
+								<div class="{{ column.classes }} col">
+									<div class="row">
+										{% set length = '' %}
+
+										{% if navItems|length > 3 %}
+											{% set length = '-6' %}
+										{% endif %}
+										{% for item in navItems %}
+											{% switch item.navigationType %}
+												{% case 'article' %}
+													<div class="col-12">
+														<div class="nav-item builder-section">
+															{% set article = item.getElement() %}
+														
+															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %} 
+														</div>
+													</div>
+												{% case 'articleAuto' %}
+													<div class="col-12">
+														<div class="nav-item builder-section">
+															{% set category = item.resourceCategory.one() %}
+															{% set article = craft.entries.section('articles').relatedTo(category).one() %}
+
+															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %}
+														</div>
+													</div>
+
+													{% case 'callout' %}
+													<div class="col-12">
+														<div class="nav-item nav-callout">
+<a href="{{ item.url }}" {% if item.newWindow %} target="_blank" rel="noopener" {% endif %} {% for attribute in item.customAttributes %} {{ attribute.attribute }}="{{ attribute.value }}" {% endfor %} class="{% if item.active %}nav-active{% endif %} {{ item.classes }}" {% if item.speedbump is defined and item.speedbump %} data-speedbump="true" {% endif %}>
+
+															{% set image = item.asset.one() %}
+																<div class="row align-items-center gx-2">
+																	<div class="col-3">
+																		<div class="icon-contain"><img src="{{ image.url() }}" alt="{{ item.title }}"></div>
+																	</div>
+																	<div class="col">
+																		<p><strong>{{ item.title }}</strong></p>
+																	</div>
+																</div>
+															</a>
+														</div>
+													</div>
+												{% case 'navItem' %}
+													<div class="col-12">
+														<div class="nav-item">
+															{% include globalPath ~ 'navLink' with{node:item} %}
+
+														</div>
+													</div>
+												{% default %}
+													<div class="col-12">
+														<div class="nav-item">
+															<h4 class="{{ item.classes }}">{{ item.title }}</h4>
+															{{ item.richText }}
+														</div>
+													</div>
+											{% endswitch %}
+										{% endfor %}
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</li>

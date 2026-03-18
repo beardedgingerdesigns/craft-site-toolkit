@@ -1,0 +1,17 @@
+<div class="pagination">
+<a href="{{ pageInfo.firstUrl }}">&lsaquo;</a>
+{% if pageInfo.prevUrl %}<a href="{{ pageInfo.prevUrl }}">&laquo;</a>{% endif %}
+
+{% for page, url in pageInfo.getPrevUrls(2) %}
+	<a href="{{ url }}">{{ page }}</a>
+{% endfor %}
+
+<a href="#" class="active">{{ pageInfo.currentPage }}</a>
+
+{% for page, url in pageInfo.getNextUrls(4) %}
+	<a href="{{ url }}">{{ page }}</a>
+{% endfor %}
+
+{% if pageInfo.nextUrl %}<a href="{{ pageInfo.nextUrl }}">&raquo;</a>{% endif %}
+<a href="{{ pageInfo.lastUrl }}">&rsaquo;</a>
+</div>

@@ -1,0 +1,20 @@
+{% set icon = '' %}
+{% if entry.section == 'News' %}
+	{% set icon = 'fas fa-newspaper' %}
+{% elseif entry.section == 'Events' %}
+{% set icon = 'fas fa-calendar-alt' %}
+{% endif %}
+<article class="article-resource">
+	<a href="{{ entry.url }}">
+		<div class="module bg-white">
+		<div class="entry-meta">
+		<div class="date-meta">
+				<span><i class="{{icon}}"></i> {{ entry.section }}</span> <div></div> {{ entry.postDate | date("M d, Y") }}
+			</div>
+			<h4>{{ entry.title | replace('®','<sup>®</sup>') | raw}}</h4>
+			
+		</div>
+		</div>
+	
+</a>
+</article>

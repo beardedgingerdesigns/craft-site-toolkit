@@ -1,0 +1,20 @@
+{% if image is defined and image | length %}
+{% set image = image %}
+{% set extension = image.extension %}
+{% else %}
+{% set image = 'https://storage.googleapis.com/2rm-hosted-assets/bankIowa/blankimage.gif' %}
+{% set extension = 'gif' %}
+{% endif %}
+{% if extension == 'svg' %}
+<picture class="svg-img"><img src="{{ image.url }}" alt="{{ alt }}"></picture>
+{% else %}
+{% set format = format ?? 'jpg' %}
+{% set myTransform = craft.imagerx.transformImage(image, imageSizes, { ratio:ratio,format: format, fillTransforms: true }) %}
+{% set myTransformWebp = craft.imagerx.transformImage(image, imageSizes, { ratio:ratio,format: 'webp', fillTransforms: true }) %}
+<picture>
+    <source srcset="{{ myTransformWebp | srcset }}" type="image/webp">
+    <img srcset="{{ myTransform | srcset }}" 
+         src="{{ craft.imagerx.placeholder({ width: 90, height: 90 }) }}" 
+         alt="{{ alt }}">
+</picture>
+{% endif %}

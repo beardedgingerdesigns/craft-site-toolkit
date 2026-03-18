@@ -1,0 +1,125 @@
+{# --------- SETTINGS / CACHE BUST --------- #}
+
+{# --------- THIRD-PARTY / VENDOR --------- #}
+{# Warm up FA kit connections to reduce late swaps #}
+<link rel="preconnect" href="https://kit.fontawesome.com" crossorigin>
+<link rel="preconnect" href="https://ka-f.fontawesome.com" crossorigin>
+
+{# Font Awesome kit (deferred) #}
+<script src="https://kit.fontawesome.com/0d5e3fdebc.js" crossorigin="anonymous"></script>
+
+{# Bootstrap bundle (defer so it won’t block; if production.js depends on it, keep before production.js) #}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+
+{# GSAP + jQuery: use defer to allow parallel download and guaranteed execution order #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js" defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" defer></script>
+
+{# Your app bundle (with cache bust) #}
+<script src="/assets/js/production.min.js?v={{ cacheBust }}" defer></script>
+
+
+
+{# --------- INLINE BOOTSTRAP / INIT (runs after DOM is ready & after deferred scripts) --------- #}
+{% js at endBody %}
+document.addEventListener('DOMContentLoaded', function () {
+  // Run vendor bootstrap if present (wrapped in try/catch to avoid hard errors)
+  if (typeof loadVendor === 'function') {
+    try { loadVendor(); } catch (e) { /* no-op */ }
+  }
+
+  // Initialize your app if present
+  if (typeof init === 'function') {
+    try { init(); } catch (e) { /* no-op */ }
+  }
+
+  // Run any queued callbacks
+  if (Array.isArray(window.loadScripts)) {
+    window.loadScripts.forEach(function (fn) {
+      try { if (typeof fn === 'function') fn(); } catch (e) { /* no-op */ }
+    });
+  }
+
+  // Keyboard shortcut to open CP edit (only if entry is defined)
+  {% if entry is defined %}
+  document.addEventListener('keyup', function (e) {
+    if (e.shiftKey && e.key === 'ArrowDown') {
+      window.open('{{ entry.cpEditUrl }}', '_blank');
+    }
+  });
+  {% endif %}
+
+  // Speedbump modal logic (delegated)
+  (function () {
+    var modal = document.getElementById('speedbumpModal');
+    var confirmButton = document.getElementById('speedbumpConfirm');
+    var cancelButton  = document.getElementById('speedbumpCancel');
+    if (!modal || !confirmButton || !cancelButton) return;
+
+    var targetHref = '';
+    document.body.addEventListener('click', function (event) {
+      var link = event.target.closest('a[data-speedbump="true"]');
+      if (!link) return;
+      event.preventDefault();
+      targetHref = link.href;
+      modal.style.display = 'flex';
+    });
+
+    confirmButton.addEventListener('click', function () {
+      modal.style.display = 'none';
+      if (targetHref) window.open(targetHref, '_blank');
+      targetHref = '';
+    });
+
+    cancelButton.addEventListener('click', function () {
+      modal.style.display = 'none';
+      targetHref = '';
+    });
+  }());
+
+  // Legacy IMI chat bootstrap (kept but sandboxed)
+  (function () {
+    var i = {
+      t: function () {
+        var e = "https://media.imi.chat/widget/js/imichatinit.js";
+        try {
+          var o = new XMLHttpRequest();
+          o.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+            var t = document.getElementById("divicw");
+            if (!t) return;
+            if (this.status === 0) { i.o(t); return; }
+            var s = document.createElement("script");
+            s.text = this.responseText;
+            t.parentNode.insertBefore(s, t.nextSibling);
+          };
+          o.open("GET", e, true);
+          o.send();
+        } catch (s) { /* no-op */ }
+      },
+      o: function (t) {
+        t.insertAdjacentHTML("afterend",
+          '<iframe id="tls_al_frm" frameborder="0" style="overflow:hidden;height:208px;width:394px;position:fixed;display:block;right:48px;bottom:12px;z-index:99999;display:none;"></iframe>'
+        );
+        var e = document.getElementById("tls_al_frm");
+        if (!e) return;
+        var o = e.contentWindow || (e.contentDocument.document || e.contentDocument);
+        o.document.open();
+        o.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Unsupported</title><style>body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#99a0b0;font-size:14px}.popover__content{background:#fbfbfe;padding:1.5rem;border-radius:5px;width:300px;box-shadow:0 2px 5px rgba(0,0,0,.26);position:relative}.popover__message{font-weight:600;color:#56627c;font-size:16px}.pull-left{float:left}.clearfix{clear:both}.hdr-txt{width:218px;margin-top:3px}.para-txt a{text-decoration:none;color:#005cde}.close-btn{position:absolute;right:15px;top:15px}.close-btn a{text-decoration:none;font-weight:400;color:#56627c;font-size:16px}</style></head><body><div class="popover__content"><div class="close-btn"><a href="#" onclick="closeTLSAlert();">X</a></div><div class="popover__message"><div class="pull-left hdr-txt">This browser version is not supported on LiveChat.</div></div><div class="clearfix"></div><p class="para-txt">Please update your browser to the latest version and re-open the website to access the widget.</p></div><script>function closeTLSAlert(){window.parent.postMessage({action:"close_tls_alert"}, "*");}<\/script></body></html>');
+        o.document.close();
+        e.style.display = "block";
+        window.addEventListener("message", function (t) {
+          if (t.data && t.data.action === "close_tls_alert") i.s();
+        });
+      },
+      s: function () {
+        var t = document.getElementById("tls_al_frm");
+        if (t && t.parentNode) t.parentNode.removeChild(t);
+      }
+    };
+    // Kick off (only if placeholder exists)
+    if (document.getElementById('divicw')) i.t();
+  }());
+});
+{% endjs %}

@@ -1,0 +1,21 @@
+<form method="post" class="main-form" accept-charset="UTF-8" action="{{siteUrl}}search">
+
+	<div class="container">
+		<div class="row align-items-center gy-2">
+			<div class="col-auto">
+				<a class="close-search" id="searchClose">
+					<i class="fas fa-times"></i>
+				</a>
+			</div>
+			<div class="col">
+				<input type="text" name="query" id="query" placeholder="{{ term ?? 'search' }}">
+			</div>
+			<div class="col-12 col-lg-auto">
+				<button type="submit" class="button button-primary m-0">
+					<i class="fas fa-search"></i>
+					Search</button>
+			</div>
+
+		</div>
+	</div>
+</form>
