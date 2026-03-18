@@ -1,0 +1,26 @@
+{% set bodyBlockPaths = bodyBlockPaths ?? ['body_blocks/', 'site-toolkit/body_blocks/'] %}
+{% set slides = block.children.all() %}
+
+<section class="header-builder-slider bg-secondary">
+	<div class="flexslider my-0">
+		<ul class="slides">
+			{% for block in slides %}
+			
+				<li>
+					{% switch block.type %}
+						{% case "multiColumn" %}
+							{% include [bodyBlockPaths[0] ~ 'multiColumn', bodyBlockPaths[1] ~ 'multiColumn'] with{block:block,priority:loop.first,isHeader:true,isFirst:loop.first} %}
+						{% case "leftRightFullWidthBleedImage" %}
+							{% include 'body_blocks/leftRightFullWidthBleedImage' with{block:block,priority:loop.first,isFirst:loop.first}%}
+					{% endswitch %}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+<div class="slider-loading" style="position:absolute;display:grid;background-color:rgba(var(--secondary-color-val),1);pointer-events:none;opacity:1;z-index:3" aria-live="polite" aria-busy="true" role="status">
+
+	<div class="loader" aria-hidden="true"></div>
+	<span class="visually-hidden">Loading slideshow…</span>
+</div>
+
+</section>

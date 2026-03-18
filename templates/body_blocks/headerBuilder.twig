@@ -1,0 +1,163 @@
+{% set row = block.sectionProperties[0] %}
+
+{% set class = '' %}
+{% set overlayColor = '' %}
+{% set opacity = 1 %}
+{% set bg = null %}
+
+{% set images = [] %}
+{% set videos = [] %}
+{% set overlayImages = [] %}
+{% set positions = [] %}
+{% set overlaypositions = [] %}
+{% set repeats = [] %}
+{% set overlayrepeats = [] %}
+{% set sizes = [] %}
+{% set overlaysizes = [] %}
+{% set crop = {
+    format: 'webp',
+} %}
+
+{% set overlay = false %}
+
+{% set properties = block.backgroundProperties.all() %}
+{% set overlayProperties = block.overlayBackgroundProperties.all() %}
+
+{% if overlayProperties | length %}
+    {% set overlay = true %}
+
+    {% for prop in overlayProperties %}
+        {% switch prop.type %}
+        {% case 'backgroundColor' %}
+        {% set overlayColor = prop.color %}
+        {% set opacity = prop.opacity|number %}
+
+        {% case 'backgroundImage' %}
+        {% set image = prop.image.eagerly().one() %}
+        {% set position = prop.backgroundPosition[0] ?? null %}
+        {% set size = prop.backgroundSize[0] ?? null %}
+        {% if image %}
+            {% set overlayImages = overlayImages|push('url(' ~ image.url(crop) ~ ')') %}
+        {% endif %}
+        {% set xPosition = position.xCustom ?? position.xAxis %}
+        {% set yPosition = position.yCustom ?? position.yAxis %}
+        {% set overlaywidth = size.width ?? 'auto' %}
+        {% set overlayheight = size.height ?? 'auto' %}
+
+        {% if overlayheight == 'Cover' and overlaywidth == 'Cover' %}
+            {% set overlaysizeProp = 'cover' %}
+        {% else %}
+            {% set overlaysizeProp = overlaywidth ~ ' ' ~ overlayheight %}
+        {% endif %}
+
+        {% set overlaypositions = overlaypositions|push(xPosition ~ ' ' ~ yPosition) %}
+        {% set overlayrepeats = overlayrepeats|push(prop.backgroundRepeat) %}
+        {% set overlaysizes = overlaysizes|push(overlaysizeProp) %}
+
+        {% endswitch %}
+    {% endfor %}
+{% endif %}
+
+{% for prop in properties %}
+    {% switch prop.type %}
+
+    {% case 'backgroundColor' %}
+    {% set color = prop.color.eagerly().one() %}
+    {% set class = color ? 'bg-' ~ color.slug : class %}
+
+    {% case 'backgroundVideo' %}
+    {% set video = prop.video.eagerly().one() %}
+    {% if video %}
+        {% set videos = videos|push(video.url()) %}
+    {% endif %}
+
+    {% case 'backgroundImage' %}
+    {% set image = prop.image.eagerly().one() %}
+    {% set position = prop.backgroundPosition[0] ?? null %}
+    {% set size = prop.backgroundSize[0] ?? null %}
+    {% if image %}
+        {% set images = images|push('url(' ~ image.url(crop) ~ ')') %}
+    {% endif %}
+    {% set xPosition = position.xCustom ?? position.xAxis %}
+    {% set yPosition = position.yCustom ?? position.yAxis %}
+    {% set width = size.width ?? 'auto' %}
+    {% set height = size.height ?? 'auto' %}
+
+    {% if height == 'Cover' and width == 'Cover' %}
+        {% set sizeProp = 'cover' %}
+    {% else %}
+        {% set sizeProp = width ~ ' ' ~ height %}
+    {% endif %}
+
+    {% set positions = positions|push(xPosition ~ ' ' ~ yPosition) %}
+    {% set repeats = repeats|push(prop.backgroundRepeat) %}
+    {% set sizes = sizes|push(sizeProp) %}
+
+    {% endswitch %}
+{% endfor %}
+
+<div id="{{ row.sectionId }}" class="block{{ block.id }} hero builder-section builder-section bg-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-10">
+                <div class="headline">
+                    <h1>{{ block.headline|raw }}</h1>
+                    {% if block.subhead %}
+                    <h2>{{ block.subhead }}</h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-5">
+                {{ block.richText }}
+            </div>
+        </div>
+    </div>
+    <div class="background-elements">
+    {% if block.helperText | length %}
+    <div class="bg-white helper-text subhead">{{ block.helperText|raw }}</div>
+    {% endif %}
+        {% if videos | length and not craft.app.request.isMobileBrowser(true) %}
+            {% for video in videos %}
+                <div class="bg-video-container">
+                    <video autoplay muted loop playsinline class="background-video">
+                        <source src="{{ video }}" type="video/mp4"/>
+                    </video>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+<style>
+{% apply spaceless %}
+{% if block.customCss | length %}
+.block{{ block.id }} {
+    {{ block.customCss }}
+}
+{% endif %}
+{% if images | length %}
+
+    .block{{ block.id }} .background-elements {
+        background-image:{% for image in images %}{{ image }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-position: {% for position in positions %}{{ position }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-repeat: {% for repeat in repeats %}{{ repeat }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+        background-size:{% for size in sizes %}{{ size }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    }
+
+{% endif %}
+{% if overlay %}
+.block{{ block.id }} .overlay{
+    opacity:{{ opacity ?? '.6' }};
+    background-color:{{ overlayColor ?? '#000' }};
+    {% if overlayImages | length %}
+    background-image:{% for image in overlayImages %}{{ image }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    background-position: {% for position in overlaypositions %}{{ position }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    background-repeat: {% for repeat in overlayrepeats %}{{ repeat }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    background-size:{% for size in overlaysizes %}{{ size }}{% if loop.length > 1 and not loop.last %},{% endif %}{% endfor %};
+    {% endif %}
+}
+{% endif %}
+
+{% endapply %}
+</style>
+
+</div>

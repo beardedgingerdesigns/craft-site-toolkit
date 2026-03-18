@@ -1,0 +1,27 @@
+{% extends "site-toolkit/global/_includes/body-block-open" %}
+{% block content %}
+
+
+
+{% set items = block.children.all() %}
+
+
+    <div class="main-content {{ containerClass }}">
+        <div class="row  {{ row.verticalAlignment }} {{ row.horizontalAlignment }} gy-4">
+
+        {% for item in items %}
+            {% set extraClasses = item.extraClasses ?? '' %}
+            {% include globalPath ~ 'columnItem' with {
+                entry: item,
+                item: item,
+                extraClasses: extraClasses,
+                parentBlock: block,
+                loopIndex: loop.index
+            } %}
+        {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "site-toolkit/global/_includes/body-block-open" %}
+{% block content %}
+
+
+
+{% set items = block.testimonials.all() %}
+
+
+<div class="row g-0">
+	<div class="col-12 col-lg-5 bg-secondary">
+		<div class="testimonial-list" id="testimonial-list-{{ block.id }}">
+		{% if block.headline | length %}
+			<h2 class="mb-4 mt-4">{{ block.headline }}</h2>
+		{% endif %}
+			<div role="tablist" class="tab-list">
+			{% for item in items %}
+				<div role="tab" class="testimonial-list-item {% if loop.first %}active{% endif %}" data-target="{{item.slug}}" >
+					<p><strong>{{ item.title }}</strong><br>
+					{{ item.description }}
+					</p>
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="tab-content testimonial-content">
+		<div class="testimonial-items">
+			{% for item in items %}
+				<div id="{{item.slug}}" role="tabpanel" aria-labelledby="{{item.slug}}-tab" class="testimonial-item tab-pan {% if loop.first %}active{% endif %}">
+					<p class="testimonial">
+						{{ item.plainText }}
+					</p>
+					<p><strong>{{ item.title }}</strong><br>
+					{{ item.description }}
+					</p>
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% js at endBody %}
+(function () {
+  var list = document.getElementById('testimonial-list-{{ block.id }}');
+  if (!list || list.__testimonialTabsInited) return;
+  list.__testimonialTabsInited = true;
+
+  var container = list.closest('.row');
+  if (!container) return;
+
+  var triggers = container.querySelectorAll('.testimonial-list-item');
+  var panels = container.querySelectorAll('.tab-pan');
+
+  triggers.forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      var targetId = trigger.getAttribute('data-target');
+      if (!targetId || trigger.classList.contains('active')) return;
+
+      triggers.forEach(function (item) { item.classList.remove('active'); });
+      panels.forEach(function (panel) { panel.classList.remove('active'); });
+
+      trigger.classList.add('active');
+
+      var panel = container.querySelector('#' + CSS.escape(targetId));
+      if (panel) panel.classList.add('active');
+    });
+  });
+}());
+{% endjs %}

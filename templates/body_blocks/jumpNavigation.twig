@@ -1,0 +1,18 @@
+<section class="jump-navigation builder-section">
+<div class="module">
+    <div class="container">
+        <div class="row align-items-center">
+            {% if block.active %}
+            <div class="col-auto">
+                <p class="mb-0">{{ block.label ?? 'Jump To:' }}</p>
+            </div>
+            {% endif %}
+            {% for item in block.jumpNavigation %}
+            <div class="col">
+                <p class="mb-0"><a data-id="{{ item.sectionId }}" href="#{{ item.sectionId }}">{{ item.navTitle }}</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+</section>
