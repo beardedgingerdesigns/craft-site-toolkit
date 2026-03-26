@@ -1,7 +1,7 @@
 {% set includePaths = globalPaths ?? ['global/_includes/', 'site-toolkit/global/_includes/'] %}
 
 <li class="mega-drop-down col-auto">
-	<a href="#"  role="button" aria-expanded="false" aria-haspopup="true" role="button">
+	<a href="#" role="button" aria-expanded="false" aria-haspopup="true" role="button">
 		<span aria>
 			{{node.title}}
 			{# <i class="fas fa-angle-down"></i> #}
@@ -14,7 +14,7 @@
 					<div class="container">
 						<div class="row">
 							{% if node.richText | length %}
-							<div class="col-12">{{ node.richText }}</div>
+								<div class="col-12">{{ node.richText }}</div>
 							{% endif %}
 							{% set columnGroup = craft.navigation.nodes().descendantOf(node).level(2).all() %}
 							{% for column in columnGroup %}
@@ -32,8 +32,8 @@
 													<div class="col-12">
 														<div class="nav-item builder-section">
 															{% set article = item.getElement() %}
-														
-															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %} 
+
+															{% include '_includes/article' with{entry:article,articleClass:'article-sm'} %}
 														</div>
 													</div>
 												{% case 'articleAuto' %}
@@ -46,18 +46,20 @@
 														</div>
 													</div>
 
-													{% case 'callout' %}
+												{% case 'callout' %}
 													<div class="col-12">
 														<div class="nav-item nav-callout">
-<a href="{{ item.url }}" {% if item.newWindow %} target="_blank" rel="noopener" {% endif %} {% for attribute in item.customAttributes %} {{ attribute.attribute }}="{{ attribute.value }}" {% endfor %} class="{% if item.active %}nav-active{% endif %} {{ item.classes }}" {% if item.speedbump is defined and item.speedbump %} data-speedbump="true" {% endif %}>
+															<a href="{{ item.url }}" {% if item.newWindow %} target="_blank" rel="noopener" {% endif %} {% for attribute in item.customAttributes %} {{ attribute.attribute }}="{{ attribute.value }}" {% endfor %} class="{% if item.active %}nav-active{% endif %} {{ item.classes }}" {% if item.speedbump is defined and item.speedbump %} data-speedbump="true" {% endif %}>
 
-															{% set image = item.asset.one() %}
+																{% set image = item.asset.one() %}
 																<div class="row align-items-center gx-2">
 																	<div class="col-3">
 																		<div class="icon-contain"><img src="{{ image.url() }}" alt="{{ item.title }}"></div>
 																	</div>
 																	<div class="col">
-																		<p><strong>{{ item.title }}</strong></p>
+																		<p>
+																			<strong>{{ item.title }}</strong>
+																		</p>
 																	</div>
 																</div>
 															</a>
@@ -70,11 +72,18 @@
 
 														</div>
 													</div>
-												{% default %}
+													{% default %}
 													<div class="col-12">
 														<div class="nav-item">
-															<h4 class="{{ item.classes }}">{{ item.title }}</h4>
-															{{ item.richText }}
+															{% if item.url is defined and item.url is not null %}
+																<a class="d-block" href="{{ item.url }}" {% if item.newWindow %} target="_blank" rel="noopener" {% endif %} {% for attribute in item.customAttributes %} {{ attribute.attribute }}="{{ attribute.value }}" {% endfor %} {% if item.speedbump is defined and item.speedbump %} data-speedbump="true" {% endif %}>
+																	<h4 class="{{ item.classes }}">{{ item.title }}</h4>
+																	{{ item.richText }}
+																</a>
+															{% else %}
+																<h4 class="{{ item.classes }}">{{ item.title }}</h4>
+																{{ item.richText }}
+															{% endif %}
 														</div>
 													</div>
 											{% endswitch %}
@@ -90,3 +99,4 @@
 		</div>
 	</div>
 </li>
+
